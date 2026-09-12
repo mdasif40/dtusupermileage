@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMV | Career</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/smvlogo.jpg">
+
+  <!-- Preload critical performance assets -->
+  <link rel="preload" href="assets/smvlogo.png" as="image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Link external stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Optimized Consolidated Styles -->
+  <style>
+    /* Global Section Spacing Defaults */
+    .cards-section, 
+    .location-section {
+      width: 100%;
+      background-color: #ffffff;
+      padding: 2rem 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .cards-section, 
+      .location-section {
+        padding: 5rem 4rem;
+      }
+    }
+
+    /* Cards Grid Layout */
+    .cards-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .cards-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2.5rem;
+      }
+    }
+
+    /* Individual Card Styling */
+    .card {
+      background-color: #ffffff;
+      background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 0, 0, 0.02) 10px,
+        rgba(0, 0, 0, 0.02) 20px
+      );
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 3rem 3.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: #171717;
+    }
+
+    .card-text {
+      font-size: 0.95rem;
+      color: #525252;
+      line-height: 1.6;
+    }
+
+    /* Location Section Grid Layout */
+    .location-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    @media (min-width: 1024px) {
+      .location-container {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 4rem;
+      }
+      .location-content,
+      .location-image-wrapper {
+        grid-column: span 6 / span 6;
+      }
+    }
+
+    .location-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .location-title {
+      font-size: 2rem;
+      font-weight: 300;
+      color: #171717;
+      line-height: 1.2;
+    }
+
+    .location-title span {
+      font-weight: 400;
+    }
+
+    @media (min-width: 768px) {
+      .location-title {
+        font-size: 2.5rem;
+      }
+    }
+
+    .location-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      color: #525252;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    @media (min-width: 768px) {
+      .location-text {
+        font-size: 1rem;
+      }
+    }
+
+    .location-image-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+
+    .location-image {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* Recruitment / Join Banner Section */
+    .join-banner-section {
+      background-color: #fafafa;
+      border-top: 1px solid #f0f0f0;
+      border-bottom: 1px solid #f0f0f0;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .join-banner-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .recruitment-heading {
+      font-size: clamp(22px, 3.5vw, 32px);
+      font-weight: 600;
+      color: #dc2626;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background-color: #25D366;
+      color: #ffffff;
+      padding: 0.85rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 50px;
+      box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+      transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .whatsapp-btn:hover {
+      background-color: #22bf5b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    }
+
+    .whatsapp-icon {
+      fill: #ffffff;
+    }
+
+    /* Page Banner Section */
+    .page-banner {
+      position: relative;
+      width: 100%;
+      height: 55vh;
+      min-height: 380px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .page-banner img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.60);
+    }
+
+    .page-banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.9) 100%);
+    }
+
+    .page-banner-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 20px;
+      max-width: 900px;
+      margin-top: 40px;
+    }
+
+    .page-banner-title {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 300;
+      letter-spacing: 6px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .page-banner-text {
+      font-size: clamp(15px, 2vw, 18px);
+      color: #cfcfcc;
+      line-height: 1.6;
+      font-weight: 300;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Back to Top Button */
+    #backToTopBtn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 99;
+      background: #ffffff;
+      color: #040404;
+      border: none;
+      outline: none;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    #backToTopBtn.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    #backToTopBtn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(255, 85, 0, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      #backToTopBtn {
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Main Navigation Header -->
+  <header>
+    <a href="index.html" class="brand">
+      <img class="brand-logo" src="assets/smvlogo.png" alt="Team DTU Supermileage logo" width="120" height="60">
+      <span class="brand-name">DTU SUPERMILEAGE</span>
+    </a>
+
+    <nav class="nav-right" aria-label="Main Navigation">
+      <ul class="nav-links">
+        <li class="lvl1"><a href="index.html">Home</a></li>
+        <li class="lvl1"><a href="ourteam.html">Our Team</a></li>
+        <li class="lvl2"><a href="projects.html">Project</a></li>
+        <li class="lvl2"><a href="career.html">Career</a></li>
+        <li class="lvl3"><a href="sponsors.html">Sponsor Us</a></li>
+      </ul>
+
+      <div class="more-wrap">
+        <button class="more-btn" id="moreBtn" aria-haspopup="true" aria-expanded="false">
+          More <span class="chev">&#9662;</span>
+        </button>
+        <div class="more-panel" id="morePanel">
+          <a href="index.html">Home</a>
+          <a href="ourteam.html">Our Team</a>
+          <a href="projects.html">Project</a>
+          <a href="career.html">Career</a>
+          <a href="sponsors.html">Sponsor Us</a>
+        </div>
+      </div>
+
+    </nav>
+  </header>
+
+  <main style="padding-top: 0;">
+    
+    <!-- Full-Width Transparent Banner Section -->
+    <section class="page-banner">
+      <img src="assets/banner/career.webp" alt="Team DTU Supermileage Banner">
+      <div class="page-banner-overlay"></div>
+      
+      <div class="page-banner-content">
+        <h1 class="page-banner-title">Career</h1>
+        <p class="page-banner-text">
+          Chronicles of innovation, endurance, and global podium finishes.
+        </p>
+      </div>
+    </section>
+
+    <!-- Back to Top Button -->
+    <button id="backToTopBtn" aria-label="Back to top">&#8593;</button>
+
+    <!-- Location Section -->
+    <section class="location-section">
+      <div class="location-container">
+        
+        <!-- Left Column: Text Content -->
+        <div class="location-content">
+          <h2 class="location-title">
+            We’re based in <br />
+            <span>Delhi Technological University</span>
+          </h2>
+          <div class="location-text">
+            <p>
+              The Delhi Technological University (Formerly Delhi College of Engineering) has provided us with space to set up our lab and work day and night without disturbance at the Wind Tunnel area. The Team operates entirely from the lab space provided and gets a lot of support from University.
+            </p>
+            <p>
+              The university assists us by providing a Faculty advisor who clears up our doubts and provides valuable insights based on their extensive knowledge and experience. In addition to technical assistance, we receive Financial assistance from the University, which aids in the manufacture of the vehicle.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Column: Illustration / Image -->
+        <div class="location-image-wrapper">
+          <img 
+            src="assets/career/carees.avif" 
+            alt="Delhi Technological University Lab Location Illustration" 
+            class="location-image"
+          />
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Recruitment Status & WhatsApp Join Button Banner -->
+    <section class="join-banner-section">
+      <div class="join-banner-container">
+        <h2 class="recruitment-heading">RECRUITMENT IS LIVE!!</h2>
+        <a href="https://chat.whatsapp.com/EzGhBx8OUHdIgOia9QNd7w" target="_blank" class="whatsapp-btn">
+          <svg class="whatsapp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+          </svg>
+          Join Us
+        </a>
+      </div>
+    </section>
+
+    <!-- Departments Cards Section -->
+    <section class="cards-section">
+      <h2 class="location-title" style="text-align: center; margin-bottom: 3rem;">OUR DEPARTMENTS</h2>
+      <div class="cards-container">
+        
+        <!-- Card 1 -->
+        <div class="card">
+          <h3 class="card-title">PROPULSION & VEHICLE DYNAMICS</h3>
+          <p class="card-text">Optimizes vehicle handling, stability, and grip by engineering the suspension geometry, managing weight distribution, and controlling overall vehicle behavior through simulation and track testing.</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+          <h3 class="card-title">STEERING & BRAKES</h3>
+          <p class="card-text">The department plans the steering structure and considers how the brake system operates. They are in charge of the car's handling and safety</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+          <h3 class="card-title">AERODYNAMICS</h3>
+          <p class="card-text">Shapes the vehicle's body shell and fairings to minimize drag while balancing downforce and cooling. Using CFD and testing, they optimize overall efficiency and collaborate with mechanical teams to integrate airflow with the car's layout</p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+          <h3 class="card-title">ELECTRICAL AND EMBEDDED</h3>
+          <p class="card-text">Designs the vehicle's custom wiring harnesses, power distribution systems, and microcontrollers. Using simulation tools and rigorous testing, they manage reliable power flow and data communication across all onboard sensors and control units</p>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+          <h3 class="card-title">CORPORATE AND DESIGN</h3>
+          <p class="card-text">Manages team branding, social media presence, and visual identity to attract sponsors and engage the public. They secure vital financial partnerships through professional proposals, pitches, and stakeholder relations.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Sponsor Marquee Section -->
+    <section>
+      <div class="sponsor-marquee">
+        <div class="marquee-track" id="sponsorTrack">
+          <!-- Sponsor Set 1 -->
+          <img src="assets/sponsors/1.webp" alt="max_health Logo" class="sponsor-logo">
+          <img src="assets/sponsors/2.webp" alt="shell Logo" class="sponsor-logo">
+          <img src="assets/sponsors/3.webp" alt="steelbird Logo" class="sponsor-logo">
+          <img src="assets/sponsors/4.webp" alt="lithium Logo" class="sponsor-logo">
+          <img src="assets/sponsors/5.webp" alt="michelin Logo" class="sponsor-logo">
+          <img src="assets/sponsors/6.webp" alt="xpsindia Logo" class="sponsor-logo">
+          <img src="assets/sponsors/7.webp" alt="solidworks Logo" class="sponsor-logo">
+          <img src="assets/sponsors/8.webp" alt="ansys Logo" class="sponsor-logo">
+          
+          <!-- Sponsor Set 2: Duplicate for seamless loop -->
+          <img src="assets/sponsors/1.webp" alt="max_health Logo" class="sponsor-logo">
+          <img src="assets/sponsors/2.webp" alt="shell Logo" class="sponsor-logo">
+          <img src="assets/sponsors/3.webp" alt="steelbird Logo" class="sponsor-logo">
+          <img src="assets/sponsors/4.webp" alt="lithium Logo" class="sponsor-logo">
+          <img src="assets/sponsors/5.webp" alt="michelin Logo" class="sponsor-logo">
+          <img src="assets/sponsors/6.webp" alt="xpsindia Logo" class="sponsor-logo">
+          <img src="assets/sponsors/7.webp" alt="solidworks Logo" class="sponsor-logo">
+          <img src="assets/sponsors/8.webp" alt="ansys Logo" class="sponsor-logo">
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+  <div class="footer-container">
+
+    <!-- Column 1: Navigation Links -->
+    <div class="footer-col">
+      <h3>DTU SUPERMILEAGE</h3>
+      <div class="nav-subcolumns">
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="career.html">Join Us</a></li>
+          <li><a href="ourteam.html">Meet the Team</a></li>
+        </ul>
+        <ul class="footer-links">
+          <li><a href="sponsors.html">Sponsors</a></li>
+          <li><a href="projects.html">Projects</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Column 2: Email & Socials -->
+    <div class="footer-col">
+      <h3>SOCIALS</h3>
+      <p class="footer-email">
+        <strong>Email:</strong> supermileage[@]dce[dot]ac[dot]in
+      </p>
+
+      <div class="footer-socials">
+        <!-- Instagram -->
+        <a href="https://instagram.com/dtusmv" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+        </a>
+
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/company/dtusupermileage/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+          </svg>
+        </a>
+
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@dtusupermileage" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+          <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+          </svg>
+        </a>
+
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/DTUSupermileage/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Column 3: Location & Map -->
+    <div class="footer-col">
+      <h3>OUR LAB LOCATION</h3>
+      <div class="map-container">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d550.8829001126899!2d77.1178675981182!3d28.752760879747065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d0165c2d05ccd%3A0x493614b75f6ae252!2sSMV%20DTU!5e0!3m2!1sen!2sin!4v1786744481241!5m2!1sen!2sin" 
+          width="100%" 
+          height="250" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="strict-origin-when-cross-origin"
+          title="SMV DTU Location Map">
+        </iframe>
+      </div>
+      <p class="lab-address">Delhi Technological University, Bawana Road, Delhi</p>
+    </div>
+
+  </div>
+
+  <!-- Bottom Copyright Bar -->
+  <div class="footer-bottom">
+    <span>© 2026 DTU Supermileage. All rights reserved.</span>
+  </div>
+</footer>
+
+  <!-- Link external JavaScript -->
+  <script src="script.js"></script>
+
+  <!-- Inline Scroll Script for Back to Top Button -->
+  <script>
+    const backToTopBtn = document.getElementById('backToTopBtn');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.add('show');
+      } else {
+        backToTopBtn.classList.remove('show');
+      }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
+</body>
+</html>
