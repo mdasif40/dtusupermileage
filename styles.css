@@ -2,7 +2,6 @@
    0. ROOT & GLOBAL RESET VARIABLES
    ========================================== */
 :root {
-  --header-bg: transparent;
   --header-bg-solid: rgba(30,30,30,0.92);
   --text-light: #f4f4f2;
   --text-dim: #cfcfcc;
@@ -22,12 +21,6 @@
   padding: 0;
 }
 
-.who-we-are, 
-.join-architecture-section, 
-.highlights-section {
-  margin: 0;
-}
-
 html {
   scroll-behavior: smooth;
 }
@@ -41,6 +34,12 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.who-we-are, 
+.join-architecture-section, 
+.highlights-section {
+  margin: 0;
 }
 
 
@@ -59,8 +58,18 @@ header {
   justify-content: space-between;
   gap: 24px;
   padding: 0 40px;
-  background: transparent;
-  transition: transform 0.3s ease-in-out;
+  background-color: transparent;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              background-color 0.5s ease-in-out,
+              box-shadow 0.5s ease-in-out;
+  will-change: transform, background-color; 
+}
+
+/* Turns solid black on hover or scroll with a subtle shadow */
+header:hover,
+header.header-active {
+  background-color: #000000 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 header.header-hidden {
@@ -199,30 +208,36 @@ header.header-hidden {
   color: #fff;
 }
 
-.profile {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  gap: 6px;
+/* Hamburger Toggle Button */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px;
+  height: 20px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  flex-shrink: 0;
+  z-index: 101;
+  padding: 0;
 }
 
-.profile .avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 15px;
+.hamburger-btn .bar {
+  width: 100%;
+  height: 2px;
+  background-color: var(--text-light);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.profile .chev {
-  color: var(--accent);
-  font-size: 11px;
+.hamburger-btn.active .bar:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+.hamburger-btn.active .bar:nth-child(2) {
+  opacity: 0;
+}
+.hamburger-btn.active .bar:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
 }
 
 
@@ -290,6 +305,7 @@ header.header-hidden {
   font-size: 20px;
   font-weight: 700;
   letter-spacing: 1px;
+  color: white;
 }
 
 .quote .sig span {
@@ -339,6 +355,7 @@ header.header-hidden {
   font-weight: 400;
   letter-spacing: 14px;
   margin-bottom: 10px;
+  color: white;
 }
 
 .vision__tagline {
@@ -457,7 +474,6 @@ header.header-hidden {
   letter-spacing: inherit;
 }
 
-/* Hover State */
 .pill-btn:hover {
   background: var(--ink, #111111);
   color: #fff;
@@ -544,16 +560,6 @@ header.header-hidden {
   justify-content: center;
 }
 
-.arch-index {
-  font-size: 0.75rem;
-  letter-spacing: 0.25em;
-  color: #666666;
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: 12px;
-  font-weight: 600;
-}
-
 .join-left h2 {
   font-size: clamp(2.5rem, 4vw, 4rem);
   font-weight: 300;
@@ -571,38 +577,6 @@ header.header-hidden {
   max-width: 480px;
 }
 
-.arch-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  color: #fff;
-  padding: 14px 28px;
-  text-decoration: none;
-  font-size: 0.85rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-weight: 500;
-  width: fit-content;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.arch-btn:hover {
-  background: #111111;
-  color: #ffffff;
-  border-color: #111111;
-}
-
-.arch-btn svg {
-  transition: transform 0.3s ease;
-}
-
-.arch-btn:hover svg {
-  transform: translateX(6px);
-}
-
-/* Right Side: Department Display Carousel */
 .join-right {
   position: relative;
   width: 100%;
@@ -717,7 +691,6 @@ header.header-hidden {
   position: relative;
 }
 
-/* Centered thin black separator line (3/4 of page width) at top */
 .highlights-section::before {
   content: "";
   display: block;
@@ -727,7 +700,6 @@ header.header-hidden {
   margin: 0 auto 30px auto;
 }
 
-/* Bottom separator line (3/4 width, centered, thin black) */
 .highlights-section::after {
   content: "";
   display: block;
@@ -737,7 +709,6 @@ header.header-hidden {
   margin: 20px auto 0 auto;
 }
 
-/* Heading with left margin gap */
 .section-heading {
   font-size: 44px;
   font-weight: 300;
@@ -789,7 +760,6 @@ header.header-hidden {
   filter: brightness(0.5);
 }
 
-/* Center Active Image Styling */
 .carousel-item.active {
   z-index: 10;
 }
@@ -802,14 +772,12 @@ header.header-hidden {
   filter: brightness(1);
 }
 
-/* Prevent hover states or pointer clicking from disrupting transitions/animations */
 .carousel-container *, 
 .carousel-track *, 
 .carousel-item * {
   pointer-events: none;
 }
 
-/* Caption Styling */
 .caption {
   position: relative;
   margin-top: 25px;
@@ -890,7 +858,7 @@ header.header-hidden {
 
 
 /* ==========================================
-   8. SITE FOOTER (UPDATED & RESTRUCTURED)
+   8. SITE FOOTER & UTILITIES
    ========================================== */
 .site-footer {
   background-color: #000000;
@@ -905,7 +873,7 @@ header.header-hidden {
   max-width: 1280px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Enforces 3 balanced columns across screen sizes */
+  grid-template-columns: repeat(3, 1fr);
   gap: 32px;
   width: 100%;
   border-bottom: 1px solid #222222;
@@ -1002,6 +970,15 @@ header.header-hidden {
   display: block;
   width: 100%;
   border: 0;
+
+  /* Converts the map to a black & white dark theme */
+  filter: grayscale(100%) invert(92%) contrast(83%);
+  transition: filter 0.3s ease;
+}
+
+/* Optional: Returns to full color when hovering over the map */
+.map-container iframe:hover {
+  filter: grayscale(0%) invert(0%) contrast(100%);
 }
 
 .lab-address {
@@ -1017,38 +994,44 @@ header.header-hidden {
   text-align: center;
 }
 
-/* Hamburger Toggle Button */
-.hamburger-btn {
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 28px;
-  height: 20px;
-  background: transparent;
+/* Back to Top Floating Button */
+#backToTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99;
+  background: rgba(255, 255, 255);
+  color: #040404;
   border: none;
+  outline: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
   cursor: pointer;
-  z-index: 101;
-  padding: 0;
-}
-
-.hamburger-btn .bar {
-  width: 100%;
-  height: 2px;
-  background-color: var(--text-light);
-  border-radius: 2px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-/* Transform into 'X' when active */
-.hamburger-btn.active .bar:nth-child(1) {
-  transform: translateY(9px) rotate(45deg);
-}
-.hamburger-btn.active .bar:nth-child(2) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
   opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
-.hamburger-btn.active .bar:nth-child(3) {
-  transform: translateY(-9px) rotate(-45deg);
+
+#backToTopBtn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
+
+#backToTopBtn:hover {
+  background: rgb(255, 255, 255);  
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(255, 85, 0, 0.4);
+}
+
+
 /* ==========================================
    9. RESPONSIVE MEDIA QUERIES
    ========================================== */
@@ -1064,47 +1047,56 @@ header.header-hidden {
   .wwa-heading { font-size: 36px; letter-spacing: 4px; }
 }
 
-@media (max-width: 1024px) {
-  .arch-card, .arch-card-large {
-    grid-column: span 12;
-  }
-  .architectural-media-section {
-    padding: 80px 20px;
-  }
-}
-
 @media (max-width: 900px) {
   .vision {
     flex-direction: column;
     height: auto;
-    min-height: 100vh;
+    min-height: auto;
+    width: 100%;
+    overflow: hidden;
   }
+  
   .vision__left,
   .vision__right {
     width: 100%;
   }
+  
   .vision__left {
     min-width: 0;
-    padding: 60px 32px;
+    padding: 60px 24px 40px 24px; /* Balanced left/right padding */
     height: auto;
   }
-  .vision__right {
-    height: 50vh;
+  
+  .vision__content {
+    max-width: 100%;
   }
+  
   .vision__title {
-    font-size: 30px;
-    letter-spacing: 9px;
+    font-size: 32px;
+    letter-spacing: 6px; /* Reduced from 99px to prevent character overflow */
+    margin-bottom: 16px;
   }
+  
   .vision__tagline {
-    font-size: 19px;
-    margin-bottom: 36px;
+    font-size: 18px;
+    line-height: 1.4;
+    margin-bottom: 28px;
   }
-  .join-container {
-    grid-template-columns: 1fr;
-    gap: 40px;
+
+  .vision__body p {
+    max-width: 100%; /* Allows text to wrap properly on mobile */
+    font-size: 14.5px;
+    line-height: 1.6;
   }
-  .join-right {
-    height: 400px;
+  
+  .vision__right {
+    height: 40vh; /* Adjust car visual area for mobile screens */
+    min-height: 250px;
+  }
+
+  .vision__car {
+    width: 140%;
+    right: -20%;
   }
 }
 
@@ -1115,69 +1107,84 @@ header.header-hidden {
   .wwa-text { max-width: 560px; }
 }
 
+/* Unified Mobile & Highlights Breakpoint */
 @media (max-width: 768px) {
-  /* Site Footer Responsiveness for Small Displays */
   .footer-container {
     grid-template-columns: 1fr;
     gap: 36px;
   }
 
+  .highlights-section {
+    padding: 10px 0 30px 0;
+  }
+
   .carousel-item {
     flex: 0 0 100vw;
     max-width: 100vw;
-    padding: 0 20px;
+    padding: 0 24px;
   }
-  
+
   .carousel-item.active .image-wrapper {
-    transform: scale(1.1);
+    transform: scale(1);
   }
 
   .carousel-item img {
-    height: 260px;
+    height: 300px;
+    filter: brightness(1);
+  }
+
+  .carousel-item .caption,
+  .carousel-item.active .caption {
+    opacity: 1 !important;
+    font-size: 1rem;
+    margin-top: 16px;
   }
 }
 
-/* Consolidated Mobile View & Hamburger Drawer */
+/* Drawer Navigation View */
+/* Clean Mobile Navigation & Drawer Menu */
 @media (max-width: 760px) {
-  .lvl1 { display: none; }
-  
   header { 
-    padding: 0 20px; 
-    height: 70px; 
+    padding: 0 16px; 
+    height: 70px;
   }
   
   .brand-logo { 
-    height: 44px; /* Enlarged logo for mobile view */
+    height: 44px;
     width: auto;
   }
   
   .brand-name { 
-    font-size: 14px; 
-    letter-spacing: 1px; 
-  }
-  
-  .nav-right { 
-    gap: 14px; 
+    font-size: 13px; 
+    letter-spacing: 0.5px; 
   }
 
-  /* Hamburger Navigation Controls */
   .hamburger-btn {
     display: flex;
   }
 
-  nav {
-    position: fixed;
-    top: 70px; /* Aligned with header height */
-    left: 0;
-    width: 100%;
-    background: var(--header-bg-solid);
-    transform: translateY(-150%);
-    transition: transform 0.4s ease-in-out;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    padding: 20px 0;
+  /* Reset all desktop link hiding classes on mobile */
+  .lvl1, .lvl2, .lvl3 {
+    display: block !important;
   }
 
-  nav.nav-active {
+  /* Dropdown Menu Container */
+  #mainNav {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: auto;
+    background: #1e1e1e;
+    transform: translateY(-150%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+    padding: 10px 0 20px 0;
+    z-index: 99;
+  }
+
+  #mainNav.nav-active {
     transform: translateY(0);
   }
 
@@ -1185,18 +1192,27 @@ header.header-hidden {
     flex-direction: column;
     gap: 0;
     height: auto;
+    width: 100%;
+    padding: 0;
   }
 
   .nav-links li {
-    display: block !important;
     width: 100%;
     text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-links li:last-child {
+    border-bottom: none;
   }
 
   .nav-links a {
+    display: block;
     padding: 14px 0;
-    justify-content: center;
-    font-size: 16px;
+    font-size: 15px;
+    color: #e8e8e6;
+    height: auto;
+    width: 100%;
   }
 
   .more-wrap {
@@ -1213,7 +1229,7 @@ header.header-hidden {
 
 @media (max-width: 420px) {
   .brand-name { display: none; }
-  .brand-logo { height: 48px; } /* Scales up slightly once text hides */
+  .brand-logo { height: 48px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
