@@ -1,44 +1,54 @@
 /**
  * DTU SUPERMILEAGE - Main Application Script
- * Orchestrates header scroll visibility, intersection animations, navigation systems, department carousel, and highlights slider functionality.
+ * Orchestrates header scroll visibility/background, intersection animations,
+ * mobile drawer navigation, department carousel, highlights slider, and sponsor marquee.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================
-  // 1. Header Hide/Show on Scroll Logic
+  // 1. Header Scroll Logic (Hide/Show & Background Color)
   // ==========================================
   const header = document.querySelector('header');
   let lastScrollTop = 0;
-  const delta = 5; // Minimum scroll distance before triggering
+  const delta = 5; // Minimum scroll distance threshold
 
-  window.addEventListener('scroll', () => {
-    let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+  if (header) {
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
 
-    // Prevent negative scroll values on mobile bouncing/rubber-band effects
-    if (currentScroll < 0) return;
-
-    // Check if user scrolled past the threshold
-    if (Math.abs(lastScrollTop - currentScroll) <= delta) return;
-
-    if (currentScroll > lastScrollTop && currentScroll > header.offsetHeight) {
-      // Scrolling Down -> Hide Header
-      header.classList.add('header-hidden');
-      
-      // Close mobile/more panels if open when scrolling away
-      const morePanel = document.getElementById('morePanel');
-      const moreBtn = document.getElementById('moreBtn');
-      if (morePanel && morePanel.classList.contains('open')) {
-        morePanel.classList.remove('open');
-        moreBtn.setAttribute('aria-expanded', 'false');
+      // Toggle dark background past 50px threshold
+      if (window.scrollY > 50) {
+        header.classList.add('header-active');
+      } else {
+        header.classList.remove('header-active');
       }
-    } else {
-      // Scrolling Up -> Show Header
-      header.classList.remove('header-hidden');
-    }
 
-    lastScrollTop = currentScroll;
-  }, { passive: true });
+      // Prevent negative scroll values on mobile bounce/rubber-band effects
+      if (currentScroll < 0) return;
+
+      // Check if scroll delta exceeds threshold
+      if (Math.abs(lastScrollTop - currentScroll) <= delta) return;
+
+      if (currentScroll > lastScrollTop && currentScroll > header.offsetHeight) {
+        // Scrolling Down -> Hide Header
+        header.classList.add('header-hidden');
+        
+        // Close mobile dropdown panels if open when scrolling down
+        const morePanel = document.getElementById('morePanel');
+        const moreBtn = document.getElementById('moreBtn');
+        if (morePanel && morePanel.classList.contains('open')) {
+          morePanel.classList.remove('open');
+          if (moreBtn) moreBtn.setAttribute('aria-expanded', 'false');
+        }
+      } else {
+        // Scrolling Up -> Show Header
+        header.classList.remove('header-hidden');
+      }
+
+      lastScrollTop = currentScroll;
+    }, { passive: true });
+  }
 
 
   // ==========================================
@@ -46,44 +56,46 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   const animatedEls = document.querySelectorAll('[data-animate]');
 
-  if (!('IntersectionObserver' in window)) {
-    // Fallback: show everything immediately if observer is missing
-    animatedEls.forEach(el => el.classList.add('in-view'));
-  } else {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-          observer.unobserve(entry.target);
-        }
+  if (animatedEls.length > 0) {
+    if (!('IntersectionObserver' in window)) {
+      // Fallback: Display elements immediately if IntersectionObserver isn't supported
+      animatedEls.forEach(el => el.classList.add('in-view'));
+    } else {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.2,
+        rootMargin: '0px 0px -60px 0px'
       });
-    }, {
-      threshold: 0.2,
-      rootMargin: '0px 0px -60px 0px'
-    });
 
-    animatedEls.forEach(el => observer.observe(el));
+      animatedEls.forEach(el => observer.observe(el));
+    }
   }
 
 
   // ==========================================
-  // 3. Smooth Scroll for "Our Team" Button
+  // 3. Smooth Anchor Scrolling
   // ==========================================
-  const teamBtn = document.querySelector('.wwa-button[href^="#"]');
-  if (teamBtn) {
-    teamBtn.addEventListener('click', (e) => {
-      const targetId = teamBtn.getAttribute('href').slice(1);
-      const target = document.getElementById(targetId);
-      if (target) {
+  const anchorBtns = document.querySelectorAll('a[href^="#"]:not([href="#"])');
+  anchorBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetId = btn.getAttribute('href').slice(1);
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
         e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
-  }
+  });
 
 
   // ==========================================
-  // 4. More Menu Dropdown Toggle Logic
+  // 4. "More" Menu Dropdown Toggle Logic
   // ==========================================
   const moreBtn = document.getElementById('moreBtn');
   const morePanel = document.getElementById('morePanel');
@@ -95,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
       moreBtn.setAttribute('aria-expanded', isOpen);
     });
 
-    // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
       if (!moreBtn.contains(e.target) && !morePanel.contains(e.target)) {
         morePanel.classList.remove('open');
@@ -106,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ==========================================
-  // 5. Back to Top Button Logic (Achievements Page)
+  // 5. Back to Top Button Logic
   // ==========================================
   const backToTopBtn = document.getElementById('backToTopBtn');
 
@@ -117,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         backToTopBtn.classList.remove('show');
       }
-    });
+    }, { passive: true });
 
     backToTopBtn.addEventListener('click', () => {
       window.scrollTo({
@@ -129,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ==========================================
-  // 6. Department Carousel / Join Us Section Logic
+  // 6. Department Carousel Logic (Join Us Section)
   // ==========================================
   const cards = document.querySelectorAll(".dept-card");
   const dots = document.querySelectorAll(".dot");
@@ -138,29 +149,27 @@ document.addEventListener('DOMContentLoaded', () => {
   if (cards.length > 0 && dots.length > 0) {
     let deptCurrentIndex = 0;
     let deptSlideInterval;
-    const slideDuration = 3000; // Active slide duration in milliseconds
+    const slideDuration = 3000;
 
     function showCard(index) {
       cards.forEach((card, i) => {
         card.classList.remove("active", "expanded");
-        dots[i].classList.remove("active");
+        if (dots[i]) dots[i].classList.remove("active");
         if (i === index) {
           card.classList.add("active");
-          dots[i].classList.add("active");
+          if (dots[i]) dots[i].classList.add("active");
         }
       });
       deptCurrentIndex = index;
     }
 
     function nextDeptSlide() {
-      let nextIndex = (deptCurrentIndex + 1) % cards.length;
+      const nextIndex = (deptCurrentIndex + 1) % cards.length;
       showCard(nextIndex);
     }
 
-    // Start automated time-lag slide loop
     deptSlideInterval = setInterval(nextDeptSlide, slideDuration);
 
-    // Pause auto-slide when hovering over the department carousel
     if (carouselWrapper) {
       carouselWrapper.addEventListener("mouseenter", () => clearInterval(deptSlideInterval));
       carouselWrapper.addEventListener("mouseleave", () => {
@@ -169,14 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Manual dot click control
     dots.forEach((dot, index) => {
-      dot.addEventListener("click", () => {
-        showCard(index);
-      });
+      dot.addEventListener("click", () => showCard(index));
     });
 
-    // Click toggle capability for touch devices / inspection
     cards.forEach(card => {
       card.addEventListener("click", function() {
         this.classList.toggle("expanded");
@@ -186,37 +191,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ==========================================
-  // 7. Highlights Section Slideshow Logic
-  // ==========================================
-  const highlightsTrack = document.querySelector(".slider-track");
-  const highlightsNextBtn = document.querySelector(".next-btn");
-  const highlightsPrevBtn = document.querySelector(".prev-btn");
-  
-  if (highlightsTrack && highlightsNextBtn && highlightsPrevBtn) {
-    const cardElement = highlightsTrack.querySelector(".highlight-card");
-    if (cardElement) {
-      const cardWidth = cardElement.offsetWidth + 30; // Card width + gap
-
-      highlightsNextBtn.addEventListener("click", () => {
-        highlightsTrack.scrollBy({ left: cardWidth, behavior: "smooth" });
-      });
-
-      highlightsPrevBtn.addEventListener("click", () => {
-        highlightsTrack.scrollBy({ left: -cardWidth, behavior: "smooth" });
-      });
-    }
-  }
-
-
-  // ==========================================
-  // 8. Infinite Carousel / Track Logic (Highlights Section - Uninterrupted)
+  // 7. Infinite Responsive Carousel (Highlights Section)
   // ==========================================
   const infiniteTrack = document.getElementById('carouselTrack');
   
   if (infiniteTrack) {
-    let items = Array.from(infiniteTrack.children);
+    const items = Array.from(infiniteTrack.children);
 
-    // Clone elements for continuous loop illusion
+    // Duplicate set of elements to produce a seamless loop
     items.forEach(item => {
       const clone = item.cloneNode(true);
       infiniteTrack.appendChild(clone);
@@ -226,12 +208,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalItems = items.length;
 
     function updateCarousel(instant = false) {
-      const offset = -(currentIndex * 33.3333);
+      const isMobile = window.innerWidth <= 768;
+      const step = isMobile ? 100 : 33.3333;
+      const offset = -(currentIndex * step);
       
       if (instant) {
         infiniteTrack.style.transition = 'none';
       } else {
-        infiniteTrack.style.transition = 'transform 1s cubic-bezier(0.25, 1, 0.5, 1)';
+        infiniteTrack.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
       }
       
       infiniteTrack.style.transform = `translateX(${offset}vw)`;
@@ -239,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const allItems = infiniteTrack.querySelectorAll('.carousel-item');
       allItems.forEach((item, index) => {
         item.classList.remove('active');
-        let activeIndex = (currentIndex + 1) % allItems.length;
+        const activeIndex = isMobile ? currentIndex : (currentIndex + 1) % allItems.length;
         if (index === activeIndex) {
           item.classList.add('active');
         }
@@ -254,71 +238,56 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           currentIndex = 0;
           updateCarousel(true);
-        }, 400); // Matches transition duration
+        }, 800);
       }
     }
 
     updateCarousel();
-    
-    // Runs continuously without pausing on hover or clicks for the highlights section
-    let slideInterval = setInterval(nextSlide, 2500);
+    setInterval(nextSlide, 3000);
+
+    window.addEventListener('resize', () => updateCarousel(true));
   }
 
 
   // ==========================================
-  // 9. Highlights Coverflow Carousel Logic
+  // 8. Mobile Drawer / Hamburger Navigation
   // ==========================================
-  const coverflowTrack = document.querySelector(".carousel-track");
-  const slides = Array.from(document.querySelectorAll(".carousel-slide"));
-  const coverflowNextBtn = document.querySelector(".carousel-next-btn");
-  const coverflowPrevBtn = document.querySelector(".carousel-prev-btn");
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mainNav = document.getElementById('mainNav');
+  const navLinks = document.querySelectorAll('.nav-links a');
 
-  if (coverflowTrack && slides.length > 0 && coverflowNextBtn && coverflowPrevBtn) {
-    let coverflowIndex = 1; // Start with the second slide centered
+  if (hamburgerBtn && mainNav) {
+    hamburgerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = mainNav.classList.toggle('nav-active');
+      hamburgerBtn.classList.toggle('active', isOpen);
+      hamburgerBtn.setAttribute('aria-expanded', isOpen);
+    });
 
-    function updateCoverflow() {
-      slides.forEach((slide, i) => {
-        slide.classList.remove("active");
-        if (i === coverflowIndex) {
-          slide.classList.add("active");
-        }
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mainNav.classList.remove('nav-active');
+        hamburgerBtn.classList.remove('active');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
       });
-
-      const slideRect = slides[0].getBoundingClientRect();
-      const slideWidth = slideRect.width;
-      const gap = 30; // Matches CSS gap
-      const trackParentWidth = coverflowTrack.parentElement.getBoundingClientRect().width;
-      
-      const offset = (trackParentWidth / 2) - (slideWidth / 2) - (coverflowIndex * (slideWidth + gap));
-      coverflowTrack.style.transform = `translateX(${offset}px)`;
-    }
-
-    coverflowNextBtn.addEventListener("click", () => {
-      if (coverflowIndex < slides.length - 1) {
-        coverflowIndex++;
-        updateCoverflow();
-      }
     });
 
-    coverflowPrevBtn.addEventListener("click", () => {
-      if (coverflowIndex > 0) {
-        coverflowIndex--;
-        updateCoverflow();
+    document.addEventListener('click', (e) => {
+      if (!mainNav.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+        mainNav.classList.remove('nav-active');
+        hamburgerBtn.classList.remove('active');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
       }
     });
-
-    window.addEventListener("resize", updateCoverflow);
-    setTimeout(updateCoverflow, 50); 
-    updateCoverflow();
   }
 
 });
 
 
 // ==========================================
-// 10. Sponsor Track Dynamic Width Calculation
+// 9. Sponsor Track Dynamic Width (On Load)
 // ==========================================
-window.addEventListener('load', function() {
+window.addEventListener('load', () => {
   const track = document.getElementById('sponsorTrack');
   
   if (track) {
@@ -334,38 +303,6 @@ window.addEventListener('load', function() {
       totalWidth += logos[i].offsetWidth + marginLeft + marginRight;
     }
     
-    track.style.width = (totalWidth * 2) + 'px';
+    track.style.width = `${totalWidth * 2}px`;
   }
-
-  // Hamburger Menu Logic
-const hamburgerBtn = document.getElementById('hamburgerBtn');
-const mainNav = document.getElementById('mainNav');
-const navLinks = document.querySelectorAll('.nav-links a');
-
-if (hamburgerBtn && mainNav) {
-  hamburgerBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isOpen = mainNav.classList.toggle('nav-active');
-    hamburgerBtn.classList.toggle('active', isOpen);
-    hamburgerBtn.setAttribute('aria-expanded', isOpen);
-  });
-
-  // Close menu when clicking any link inside navigation
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      mainNav.classList.remove('nav-active');
-      hamburgerBtn.classList.remove('active');
-      hamburgerBtn.setAttribute('aria-expanded', 'false');
-    });
-  });
-
-  // Close menu when clicking outside header
-  document.addEventListener('click', (e) => {
-    if (!mainNav.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-      mainNav.classList.remove('nav-active');
-      hamburgerBtn.classList.remove('active');
-      hamburgerBtn.setAttribute('aria-expanded', 'false');
-    }
-  });
-}
 });
